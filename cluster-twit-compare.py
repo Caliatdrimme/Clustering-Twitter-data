@@ -11,9 +11,7 @@ Created on Mon Apr 20 16:57:56 2020
 
 #fit with EM
 
-#fit with k-means
-
-#fit with SOM
+#fit with other models?
 
 #compare the models' fits
 
@@ -44,7 +42,7 @@ def preprocess(file, column):
    original = []
    #my computer runs out of memory if doing full training dataset at once
    #so only with 10k for now
-   for i in range(1, 100):
+   for i in range(1, 10000):
       original.append(list_of_rows[i][column])
       
    #turn into bag of words representation
