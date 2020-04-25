@@ -14,3 +14,4 @@ The two clusters are assumed to be like the sentiment that has real labels in th
 Uses first 100 tweets to figure out if the labels are the same or should be swapped
 Calculates correct/total as a measure to compare algorithms
 
+Write up: https://ru.overleaf.com/project/5ea38aa90ead8b0001873ff0
