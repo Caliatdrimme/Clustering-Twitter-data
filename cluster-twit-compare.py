@@ -124,14 +124,12 @@ def EM(train, m):
    labels_em = best_model.predict(train)
    
    samples_em, labels_samples = best_model.sample(10)
-   print(samples_em)
-   print(labels_samples)
+   
    
    for i in range(0, 10):
       samples_em[i] = numpy.absolute(samples_em[i])
       samples_em[i] = numpy.around(samples_em[i])
-      
-   print(samples_em)
+
    #samples_em = numpy.absolute(samples_em).astype('int32')
    
    return clusters, labels_em, samples_em
@@ -235,6 +233,22 @@ def sentence_generator(dataset, pca_divider = 4, total_samples = 10):
     samples = pca.inverse_transform(samples)
     samples = numpy.absolute(numpy.around(samples)).astype('int32')
     return samples
+
+def words(data, dictionary):
+    words = data
+    val = []
+    for i in range(0, len(data)):
+          words[i] = numpy.absolute(data[i])
+          res = words[i].argsort()[::-1][:5]
+          #print(res)
+          sentence = ''
+          for ind in range(0, 5):
+              i = res[ind]
+              #print(i)
+              sentence = sentence + " " + dictionary[i]
+          val.append(sentence)
+        
+    return val
    
 def print_samples(samples, dictionary):
     total_samples,dimensions = samples.shape
@@ -257,7 +271,7 @@ results = []
 
 results_n = []
 
-for i in range(100, 300, 100):
+for i in range(100, 200, 100):
     #making the test set out of the original training set as it is labelled
     n_total = i + 100
     print("Using " + str(i) + " data samples\n")
@@ -277,13 +291,9 @@ for i in range(100, 300, 100):
     
     print("The training correctness of gmm is " + str(correct(labels, em_labels)) + "\n")
     print("The training correctness of kmeans is " + str(correct(labels, kmeans_labels)) + "\n")
-    
-    #REPORT MOST LIKELY WORDS OF EACH CLUSTER FROM THE CENTER REPRESENTATION INSTEAD
-    #print("KMeans centres\n")
-    #print_samples(kmeans_res, dict_train)
-    
-    #print("EM clusters\n")
-    #print_samples(em_res, dict_train)
+
+    print(words(em_res, dict_train))
+    print(words(kmeans_res, dict_train))
     
     results.append([correct(labels, em_labels),correct(labels, kmeans_labels)])
     
@@ -308,7 +318,8 @@ for i in range(100, 300, 100):
     print("The training correctness of gmm is " + str(correct(labels, em_labels)) + "\n")
     print("The training correctness of kmeans is " + str(correct(labels, kmeans_labels)) + "\n")
     
-    #REPORT MOST LIKELY WORDS OF THE CENTRE REPRESENTATIONS
+    print(words(em_res, dictionary))
+    print(words(kmeans_res, dictionary))
     
     results_n.append([correct(labels, em_labels),correct(labels, kmeans_labels)])
     
@@ -329,9 +340,5 @@ for i in range(100, 300, 100):
 print(results)
 print(results_n)
 #report results in nice graphics
-
-    
-
-
 
 
