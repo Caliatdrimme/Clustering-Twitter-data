@@ -33,6 +33,11 @@ from sklearn.neighbors import KernelDensity
 from sklearn.decomposition import PCA
 from sklearn.model_selection import GridSearchCV
 
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+
 
 
 def vect(train, ngram=None):
@@ -267,11 +272,19 @@ file_train = "train.csv"
 #max number of clusters we want to find
 m = 2
 
-results = []
+data = []
 
-results_n = []
+em = []
 
-for i in range(100, 200, 100):
+kmeans = []
+
+em_n = []
+
+kmeans_n = []
+
+
+
+for i in range(100, 1000, 50):
     #making the test set out of the original training set as it is labelled
     n_total = i + 100
     print("Using " + str(i) + " data samples\n")
@@ -295,7 +308,9 @@ for i in range(100, 200, 100):
     print(words(em_res, dict_train))
     print(words(kmeans_res, dict_train))
     
-    results.append([correct(labels, em_labels),correct(labels, kmeans_labels)])
+    em.append(correct(labels, em_labels))
+    kmeans.append(correct(labels, kmeans_labels))
+    data.append(i)
     
     print("EM samples\n")
     print_samples(em_samples, dict_train)
@@ -321,7 +336,8 @@ for i in range(100, 200, 100):
     print(words(em_res, dictionary))
     print(words(kmeans_res, dictionary))
     
-    results_n.append([correct(labels, em_labels),correct(labels, kmeans_labels)])
+    em_n.append(correct(labels, em_labels))
+    kmeans_n.append(correct(labels, kmeans_labels))
     
     print("EM samples\n")
     print_samples(em_samples, dictionary)
@@ -337,8 +353,28 @@ for i in range(100, 200, 100):
     
     
 
-print(results)
-print(results_n)
+print(em)
+print(data)
+print(kmeans)
+print(em_n)
+print(data)
+print(kmeans_n)
+
+plt.plot(data, em, '-c', label='GMM')
+plt.plot(data, kmeans, '-m', label='KMeans')
+plt.legend(loc='upper left', frameon=False)
+plt.show()
+plt.savefig("BOW.png")
+plt.close()
+
+plt.plot(data, em_n, '-c', label='GMM')
+plt.plot(data, kmeans_n, '-m', label='KMeans')
+plt.legend(loc='upper left', frameon=False)
+plt.show()
+plt.savefig("3grams.png")
+plt.close()
+
+
 #report results in nice graphics
 
 
