@@ -284,13 +284,12 @@ em_n = []
 
 kmeans_n = []
 
+f = open("results.txt", "w")
 
-
-for i in range(100, 1000, 100):
+for i in range(100, 1100, 100):
     #making the test set out of the original training set as it is labelled
     
-    f = open("results.txt", "w")
-    
+   
     n_total = i + 100
     print("Using " + str(i) + " data samples\n")
     f.write("Using " + str(i) + " data samples\n")
@@ -385,22 +384,13 @@ print(em_n)
 print(data)
 print(kmeans_n)
 
-f.write('\n'.join(data))
-f.write("\n")
-f.write('\n'.join(em))
-f.write("\n")
-f.write('\n'.join(kmeans))
-f.write("\n")
-f.write('\n'.join(em_n))
-f.write("\n")
-f.write('\n'.join(kmeans_n))
-f.write("\n")
-
 f.close()
 
 plt.plot(data, em, '-c', label='GMM')
 plt.plot(data, kmeans, '-m', label='KMeans')
 plt.legend(loc='upper left', frameon=False)
+plt.xlabel('Number of tweets')
+plt.ylabel('Ratio of correctly classified tweets')
 plt.savefig("BOW.png")
 plt.show()
 plt.close()
@@ -408,6 +398,8 @@ plt.close()
 plt.plot(data, em_n, '-c', label='GMM')
 plt.plot(data, kmeans_n, '-m', label='KMeans')
 plt.legend(loc='upper left', frameon=False)
+plt.xlabel('Number of tweets')
+plt.ylabel('Ratio of correctly classified tweets')
 plt.savefig("3grams.png")
 plt.show()
 plt.close()
