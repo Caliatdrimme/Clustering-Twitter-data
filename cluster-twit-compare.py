@@ -262,7 +262,9 @@ def print_samples(samples, dictionary):
         for i in range(dimensions):
             if(samples[sample,i] != 0):
                 print(dictionary[i], end = ' ')
+                f.write(str(dictionary[i]) + ' ')
         print()
+        f.write("\n")
    
 #constants definitions
 #only on labelled data for now
@@ -284,10 +286,14 @@ kmeans_n = []
 
 
 
-for i in range(100, 1000, 50):
+for i in range(100, 1000, 100):
     #making the test set out of the original training set as it is labelled
+    
+    f = open("results.txt", "w")
+    
     n_total = i + 100
     print("Using " + str(i) + " data samples\n")
+    f.write("Using " + str(i) + " data samples\n")
     
     #preprocess the data
     train, dict_train, labels = preprocess(file_train, 2, 1)
@@ -304,26 +310,37 @@ for i in range(100, 1000, 50):
     
     print("The training correctness of gmm is " + str(correct(labels, em_labels)) + "\n")
     print("The training correctness of kmeans is " + str(correct(labels, kmeans_labels)) + "\n")
+    
+    f.write("The training correctness of gmm is " + str(correct(labels, em_labels)) + "\n")
+    f.write("The training correctness of kmeans is " + str(correct(labels, kmeans_labels)) + "\n")
 
     print(words(em_res, dict_train))
     print(words(kmeans_res, dict_train))
+    
+    f.write('\n'.join(words(em_res, dict_train)))
+    f.write('\n'.join(words(kmeans_res, dict_train)))
+    
     
     em.append(correct(labels, em_labels))
     kmeans.append(correct(labels, kmeans_labels))
     data.append(i)
     
     print("EM samples\n")
+    f.write("EM samples\n")
     print_samples(em_samples, dict_train)
    
     
     print("\n\nsentences for PCA with 1/4 of original features size")
+    f.write("\n\nsentences for PCA with 1/4 of original features size")
     samples = sentence_generator(train, pca_divider=4, total_samples = 10)
     print_samples(samples, dict_train)
     print("\n\nsentences for PCA with 1/2 of original features size")
+    f.write("\n\nsentences for PCA with 1/2 of original features size")
     samples = sentence_generator(train, pca_divider=2, total_samples = 10)
     print_samples(samples, dict_train)
     
     print("Here n-gram of 3 is used instead of bag-of-words and we can see dependency between words such as subject etc. are captured\n")
+    f.write("Here n-gram of 3 is used instead of bag-of-words and we can see dependency between words such as subject etc. are captured\n")
     dataset,dictionary,labels = preprocess(file_train, 2, 1, ngram=(3,3))
     
     em_res, em_labels, em_samples = EM(dataset, m+1)
@@ -333,24 +350,32 @@ for i in range(100, 1000, 50):
     print("The training correctness of gmm is " + str(correct(labels, em_labels)) + "\n")
     print("The training correctness of kmeans is " + str(correct(labels, kmeans_labels)) + "\n")
     
+    f.write("The training correctness of gmm is " + str(correct(labels, em_labels)) + "\n")
+    f.write("The training correctness of kmeans is " + str(correct(labels, kmeans_labels)) + "\n")
+    
     print(words(em_res, dictionary))
     print(words(kmeans_res, dictionary))
+    
+    f.write('\n'.join(words(em_res, dictionary)))
+    f.write('\n'.join(words(kmeans_res, dictionary)))
     
     em_n.append(correct(labels, em_labels))
     kmeans_n.append(correct(labels, kmeans_labels))
     
     print("EM samples\n")
+    f.write("EM samples\n")
     print_samples(em_samples, dictionary)
    
     
     print("\n\nsentences for PCA with 1/4 of original features size")
+    f.write("\n\nsentences for PCA with 1/4 of original features size")
     samples = sentence_generator(dataset, pca_divider=4, total_samples = 10)
     print_samples(samples, dictionary)
     print("\n\nsentences for PCA with 1/2 of original features size")
+    f.write("\n\nsentences for PCA with 1/2 of original features size")
     samples = sentence_generator(dataset, pca_divider=2, total_samples = 10)
     print_samples(samples, dictionary)
-    
-    
+       
     
 
 print(em)
@@ -360,18 +385,31 @@ print(em_n)
 print(data)
 print(kmeans_n)
 
+f.write('\n'.join(data))
+f.write("\n")
+f.write('\n'.join(em))
+f.write("\n")
+f.write('\n'.join(kmeans))
+f.write("\n")
+f.write('\n'.join(em_n))
+f.write("\n")
+f.write('\n'.join(kmeans_n))
+f.write("\n")
+
+f.close()
+
 plt.plot(data, em, '-c', label='GMM')
 plt.plot(data, kmeans, '-m', label='KMeans')
 plt.legend(loc='upper left', frameon=False)
-plt.show()
 plt.savefig("BOW.png")
+plt.show()
 plt.close()
 
 plt.plot(data, em_n, '-c', label='GMM')
 plt.plot(data, kmeans_n, '-m', label='KMeans')
 plt.legend(loc='upper left', frameon=False)
-plt.show()
 plt.savefig("3grams.png")
+plt.show()
 plt.close()
 
 
